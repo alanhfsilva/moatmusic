@@ -27,6 +27,7 @@ Route::namespace('Auth')->group(function () {
 
 Route::group( ['middleware' => 'auth' ], function() {
     Route::resource('/albums', App\Http\Controllers\AlbumController::class);
+    Route::post('/albums/{id}', [App\Http\Controllers\AlbumController::class,'update']);
     Route::get('/artists', [App\Http\Controllers\ArtistController::class,'index'])->name('artists');
 });
 

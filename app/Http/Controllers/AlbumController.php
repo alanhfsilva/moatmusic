@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use App\Models\Album;
 use App\Models\User;
 
@@ -102,7 +103,7 @@ class AlbumController extends Controller
             $album->artist = $request->input('artist');
             $album->year = $request->input('year');
             $album->save();
-            return $album->toJson();
+            return redirect('/albums');
         }
     }
 
