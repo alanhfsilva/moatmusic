@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -42,32 +44,39 @@ class RegisterController extends Controller
     }
 
     /**
-     * Get a validator for an incoming registration request.
+     * Display a listing of the resource.
      *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
+     * @return \Illuminate\Http\Response
      */
-    protected function validator(array $data)
+    public function index()
     {
-        return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
+        $roles = User::ROLES;
+        return view('auth.register',compact('roles'));
     }
 
     /**
-     * Create a new user instance after a valid registration.
+     * Store a newly created resource in storage.
      *
-     * @param  array  $data
-     * @return \App\Models\User
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
-    protected function create(array $data)
+    public function store(Request $request)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+        $request->validate(
+            [
+                'full_name' => 'required',
+                'username' =>  'required|unique:users',
+                'role' => 'required',
+                'password' => 'required|confirmed|min:6'
+            ]
+        );
+        
+        User::create([
+            'full_name' => $request->input('full_name'),
+            'username' => $request->input('username'),
+            'role' => $request->input('role'),
+            'password' => Hash::make($request->input('password'))
         ]);
+        return redirect('/login');
     }
 }
