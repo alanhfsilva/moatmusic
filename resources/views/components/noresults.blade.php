@@ -1,0 +1,1 @@
+<div class="tt-no-result">No results found.</div>

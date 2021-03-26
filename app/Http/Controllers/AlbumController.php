@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Album;
+use App\Models\User;
 
 class AlbumController extends Controller
 {
@@ -13,7 +16,8 @@ class AlbumController extends Controller
      */
     public function index()
     {
-        //
+        $albums = Album::all();
+        return view('auth.album.index',compact('albums'));
     }
 
     /**
@@ -23,7 +27,7 @@ class AlbumController extends Controller
      */
     public function create()
     {
-        //
+        return view('auth.album.form');
     }
 
     /**
@@ -34,7 +38,20 @@ class AlbumController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate(
+            [
+                'name' => 'required',
+                'year' => 'required|numeric|gte:1900|lte:'.date('Y'),
+                'artist' =>  'required'
+            ]
+        );
+
+        $album = new Album();
+        $album->name = $request->input('name');
+        $album->artist = $request->input('artist');
+        $album->year = $request->input('year');
+        $album->save();
+        return redirect('/albums');
     }
 
     /**
@@ -45,7 +62,7 @@ class AlbumController extends Controller
      */
     public function show($id)
     {
-        //
+        return Album::find($id)->toJson();         
     }
 
     /**
@@ -56,7 +73,8 @@ class AlbumController extends Controller
      */
     public function edit($id)
     {
-        //
+        $album = Album::find($id);
+        return view('auth.album.form',compact('album'));
     }
 
     /**
@@ -68,7 +86,24 @@ class AlbumController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate(
+            [
+                'name' => 'required',
+                'year' => 'required|numeric|gte:1900|lte:'.date('Y'),
+                'artist' =>  'required'
+            ]
+        );
+        
+        $album = Album::find($id);
+        
+        if(isset($album)) 
+        {
+            $album->name = $request->input('name');
+            $album->artist = $request->input('artist');
+            $album->year = $request->input('year');
+            $album->save();
+            return $album->toJson();
+        }
     }
 
     /**
@@ -79,6 +114,18 @@ class AlbumController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = Auth::user();
+        if($user->role == 'admin') 
+        {
+            $album = album::find($id);
+            if(isset($album)) 
+            {
+                $album->delete();
+            }
+        } 
+        else 
+        {
+            return json_encode(['msg'=>'You do not have right do delete records.']);
+        }
     }
 }

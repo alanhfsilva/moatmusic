@@ -8,6 +8,17 @@ use App\Services\ArtistService;
 class ArtistController extends Controller
 {
     /**
+     * Display artist list in view mode.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $artists = ArtistService::getList()->toArray();
+        return view('auth.artist.index',compact(['artists']));
+    }
+    
+    /**
      * Display artist list in json mode.
      *
      * @return \Illuminate\Http\Response
