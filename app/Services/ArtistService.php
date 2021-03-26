@@ -25,6 +25,23 @@ class ArtistService
     }
 
     /**
+     * Get specific artist for given $id in a $list
+     *
+     * @return array
+     */
+    public static function getArtist($id)
+    {
+        $list = static::toArray();
+        foreach($list as $key => $value) 
+        {
+            if($value['id'] == $id) {
+                return $value;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Get $list in array format
      */
     public static function toArray()
@@ -35,6 +52,9 @@ class ArtistService
         {
             $arr[] = $value[0];
         }
+        usort($arr,function ($a,$b) {
+            return strcmp($a['name'],$b['name']);
+        });
         return $arr;
     }
     

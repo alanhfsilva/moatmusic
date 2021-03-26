@@ -16,4 +16,15 @@ class ArtistController extends Controller
     {
          return ArtistService::getList()->toJson();
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        return json_encode(ArtistService::getList()->getArtist($id));
+    }
 }
