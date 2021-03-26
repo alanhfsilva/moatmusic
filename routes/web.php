@@ -17,6 +17,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
+Route::namespace('Auth')->group(function () {
+    Route::get('/login',[App\Http\Controllers\Auth\LoginController::class, 'index'])->name('login');
+    Route::post('/logout',[App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
+    Route::post('/login',[App\Http\Controllers\Auth\LoginController::class, 'logon'])->name('login');
+    Route::get('/register',[App\Http\Controllers\Auth\RegisterController::class, 'index'])->name('register');
+    Route::post('/register',[App\Http\Controllers\Auth\RegisterController::class, 'store']);
+});
+
+Route::group( ['middleware' => 'auth' ], function() {
+    Route::resource('/albums', App\Http\Controllers\AlbumController::class);
+    Route::get('/artists', [App\Http\Controllers\ArtistController::class,'index'])->name('artists');
+});
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

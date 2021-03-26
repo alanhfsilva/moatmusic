@@ -17,3 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/artists', [ArtistController::class, 'index'])->name('api.artists');
+Route::get('/artists/json', [ArtistController::class, 'indexJson'])->name('api.artists.json');
+Route::get('/artists/{id}', [ArtistController::class, 'show'])->name('api.artists.get');
