@@ -12,7 +12,10 @@ jobs:
   Deploy:
     runs-on: ubuntu-latest
 
-    steps:      
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
         with:
@@ -27,8 +30,8 @@ jobs:
           pwd
           ls -al
 
-#       - name: Deploy With rsync
-#         run: rsync -avz ./public/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/nussati/githubaction-folder
+      - name: Deploy With rsync
+        run: rsync -avz ./public/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/nussati/githubaction-folder
   
   Build:
     runs-on: ubuntu-latest
