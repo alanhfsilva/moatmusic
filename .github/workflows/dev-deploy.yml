@@ -21,9 +21,12 @@ jobs:
       
       - name: Adding Known Hosts
         run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-      
-      - name: Deploy With rsync
-        run: rsync -avz ./public/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/nussati/githubaction-folder
+  
+      - name: Showing folder content
+        run: pwd
+
+#       - name: Deploy With rsync
+#         run: rsync -avz ./public/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/nussati/githubaction-folder
   
   Build:
     runs-on: ubuntu-latest
